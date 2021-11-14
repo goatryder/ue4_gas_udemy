@@ -2,13 +2,16 @@
 
 
 #include "GU_CharacterBase.h"
+#include "AbilitySystemComponent.h"
+#include "AttributeSetCharacter.h"
 
 // Sets default values
 AGU_CharacterBase::AGU_CharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	AbilitySystemComp = CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComp");
+	AttributeSetCharacter = CreateDefaultSubobject<UAttributeSetCharacter>("AttributeSetCharacter");
 }
 
 // Called when the game starts or when spawned
@@ -30,5 +33,17 @@ void AGU_CharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AGU_CharacterBase::AquireAbility(TSubclassOf<UGameplayAbility> AbilityToAquire)
+{
+	if (AbilitySystemComp)
+	{
+		if (HasAuthority() && AbilitySystemComp)
+		{
+			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(AbilityToAquire, 1, INDEX_NONE, this));
+		}
+		AbilitySystemComp->InitAbilityActorInfo(this, this);
+	}
 }
 
