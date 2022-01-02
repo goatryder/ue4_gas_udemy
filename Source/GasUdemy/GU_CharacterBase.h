@@ -40,4 +40,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	void AquireAbility(TSubclassOf<class UGameplayAbility> AbilityToAquire);
 
+	UFUNCTION()
+	void OnHealthChanged(float CurrentHealth, float BaseHealth, float Delta);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_OnHealthChanged(float CurrentHealth, float BaseHealth, float Delta);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_Died();
+
 };

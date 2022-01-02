@@ -18,7 +18,8 @@ AGU_CharacterBase::AGU_CharacterBase()
 void AGU_CharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	AttributeSetCharacter->OnHealthChanged.AddDynamic(this, &AGU_CharacterBase::OnHealthChanged);
 }
 
 // Called every frame
@@ -44,6 +45,16 @@ void AGU_CharacterBase::AquireAbility(TSubclassOf<UGameplayAbility> AbilityToAqu
 			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(AbilityToAquire, 1, INDEX_NONE, this));
 		}
 		AbilitySystemComp->InitAbilityActorInfo(this, this);
+	}
+}
+
+void AGU_CharacterBase::OnHealthChanged(float CurrentHealth, float BaseHealth, float Delta)
+{
+	BP_OnHealthChanged(CurrentHealth, BaseHealth, Delta);
+
+	if (CurrentHealth <= 0.f)
+	{
+		BP_Died();		
 	}
 }
 

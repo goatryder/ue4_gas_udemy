@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
+#include "GameplayEffectExtension.h"
 #include "AttributeSetCharacter.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHealthChanged, float, CurrentHealth, float, BaseHealth, float, Delta);
 
 /**
  * 
@@ -20,4 +23,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
 	FGameplayAttributeData Health;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
+    FGameplayAttributeData MaxHealth;
+
+	void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChanged OnHealthChanged;
 };
