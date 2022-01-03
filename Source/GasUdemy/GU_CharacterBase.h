@@ -33,6 +33,10 @@ private:
 
 	UPROPERTY(BlueprintReadWrite, Category="Ability", meta = (AllowPrivateAccess = true))
 	class UAttributeSetCharacter* AttributeSetCharacter;
+
+	// grant ability to character class on begin play 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TArray<TSubclassOf<class UGameplayAbility>> StartupAbilities;
 	
 public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComp; }

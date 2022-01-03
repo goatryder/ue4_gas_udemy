@@ -20,6 +20,12 @@ void AGU_CharacterBase::BeginPlay()
 	Super::BeginPlay();
 
 	AttributeSetCharacter->OnHealthChanged.AddDynamic(this, &AGU_CharacterBase::OnHealthChanged);
+
+	// grant abilities
+	for (auto& AbilityClass : StartupAbilities)
+	{
+		AquireAbility(AbilityClass);
+	}
 }
 
 // Called every frame
@@ -38,7 +44,7 @@ void AGU_CharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AGU_CharacterBase::AquireAbility(TSubclassOf<UGameplayAbility> AbilityToAquire)
 {
-	if (AbilitySystemComp)
+	if (AbilityToAquire && AbilitySystemComp)
 	{
 		if (HasAuthority() && AbilitySystemComp)
 		{
