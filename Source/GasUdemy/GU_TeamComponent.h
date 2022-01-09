@@ -104,6 +104,9 @@ public:
 
 		return nullptr;
 	}
+
+	UFUNCTION(BlueprintPure)
+	int32 GetTeamIndexByActor(const AActor* Actor, bool bTraverseOwners = true) const;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent, IsBlueprintBase) )

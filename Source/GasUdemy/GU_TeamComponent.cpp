@@ -41,6 +41,44 @@ ETeamRelationType UTeamSettingsDatabase::GetTeamsRelationByActor(const AActor* F
 	return GetTeamsRelationByComp(FirstTeamComp, SecondTeamComp, bReturnDefaultRelOnFail);
 }
 
+int32 UTeamSettingsDatabase::GetTeamIndexByActor(const AActor* Actor, bool bTraverseOwners) const
+{
+	auto FindTeamComp = [=](const AActor* A)
+	{
+		auto TeamComp = (UGU_TeamComponent*)A->GetComponentByClass(UGU_TeamComponent::StaticClass());
+		if (TeamComp)
+		{
+			return TeamComp;
+		}
+		
+		if (bTraverseOwners)
+		{
+			while (A)
+			{
+				A = A->GetOwner();
+				if (A)
+				{
+					TeamComp = (UGU_TeamComponent*)A->GetComponentByClass(UGU_TeamComponent::StaticClass());
+					if (TeamComp)
+					{
+						return TeamComp;
+					}
+				}
+			}
+		}
+
+		return (UGU_TeamComponent*)nullptr;
+	};
+
+	auto TeamComp = FindTeamComp(Actor);
+	if (TeamComp)
+	{
+		return TeamComp->GetTeamIndex();
+	}
+
+	return -1;
+}
+
 // Sets default values for this component's properties
 UGU_TeamComponent::UGU_TeamComponent()
 {
