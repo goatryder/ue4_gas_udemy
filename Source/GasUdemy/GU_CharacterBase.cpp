@@ -4,6 +4,7 @@
 #include "GU_CharacterBase.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSetCharacter.h"
+#include "GU_TeamComponent.h"
 
 // Sets default values
 AGU_CharacterBase::AGU_CharacterBase()
@@ -12,6 +13,7 @@ AGU_CharacterBase::AGU_CharacterBase()
 	PrimaryActorTick.bCanEverTick = true;
 	AbilitySystemComp = CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComp");
 	AttributeSetCharacter = CreateDefaultSubobject<UAttributeSetCharacter>("AttributeSetCharacter");
+	TeamComponent = CreateDefaultSubobject<UGU_TeamComponent>("TeamComp");
 }
 
 // Called when the game starts or when spawned

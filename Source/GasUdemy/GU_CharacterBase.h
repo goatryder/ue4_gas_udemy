@@ -37,6 +37,9 @@ private:
 	// grant ability to character class on begin play 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TArray<TSubclassOf<class UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta = (AllowPrivateAccess = true))
+	class UGU_TeamComponent* TeamComponent;
 	
 public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComp; }
