@@ -22,6 +22,8 @@ void AGU_CharacterBase::BeginPlay()
 	Super::BeginPlay();
 
 	AttributeSetCharacter->OnHealthChanged.AddDynamic(this, &AGU_CharacterBase::OnHealthChanged);
+	AttributeSetCharacter->OnManaChanged.AddDynamic(this, &AGU_CharacterBase::OnManaChanged);
+	AttributeSetCharacter->OnStaminaChanged.AddDynamic(this, &AGU_CharacterBase::OnStaminaChanged);
 
 	// grant abilities
 	for (auto& AbilityClass : StartupAbilities)
@@ -64,5 +66,15 @@ void AGU_CharacterBase::OnHealthChanged(float CurrentHealth, float BaseHealth, f
 	{
 		BP_Died();		
 	}
+}
+
+void AGU_CharacterBase::OnManaChanged(float CurrentMana, float BaseMana, float Delta)
+{
+	BP_OnManaChanged(CurrentMana, BaseMana, Delta);
+}
+
+void AGU_CharacterBase::OnStaminaChanged(float CurrentStamina, float BaseStamina, float Delta)
+{
+	BP_OnStaminaChanged(CurrentStamina, BaseStamina, Delta);
 }
 

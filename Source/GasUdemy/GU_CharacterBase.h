@@ -52,7 +52,19 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void BP_OnHealthChanged(float CurrentHealth, float BaseHealth, float Delta);
+
+	UFUNCTION()
+	void OnManaChanged(float CurrentMana, float BaseMana, float Delta);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_OnManaChanged(float CurrentMana, float BaseMana, float Delta);
 	
+	UFUNCTION()
+	void OnStaminaChanged(float CurrentStamina, float BaseStamina, float Delta);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_OnStaminaChanged(float CurrentStamina, float BaseStamina, float Delta);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void BP_Died();
 
