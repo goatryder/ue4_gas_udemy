@@ -26,9 +26,20 @@ void AGU_CharacterBase::BeginPlay()
 	AttributeSetCharacter->OnStaminaChanged.AddDynamic(this, &AGU_CharacterBase::OnStaminaChanged);
 
 	// grant abilities
-	for (auto& AbilityClass : StartupAbilities)
+	for (const auto& StartupAbility : StartupAbilities)
 	{
-		AquireAbility(AbilityClass);
+		AquireAbility(StartupAbility.AbilityClass);
+
+		if (StartupAbility.bActivateOnStart)
+		{
+			AbilitySystemComp->TryActivateAbilityByClass(StartupAbility.AbilityClass, false);			
+		}
+	}
+
+	// health full -> add tag full health
+	if (FullHealthTag.IsValid() && AttributeSetCharacter->Health.GetCurrentValue() == AttributeSetCharacter->MaxHealth.GetCurrentValue())
+	{
+		AddGameplayTagUnique(FullHealthTag);
 	}
 }
 
@@ -62,6 +73,16 @@ void AGU_CharacterBase::OnHealthChanged(float CurrentHealth, float BaseHealth, f
 {
 	BP_OnHealthChanged(CurrentHealth, BaseHealth, Delta);
 
+	// health full -> add tag full health
+	if (FullHealthTag.IsValid() && CurrentHealth == BaseHealth)
+	{
+		AddGameplayTagUnique(FullHealthTag);
+	}
+	else
+	{
+		RemoveGameplayTagUnique(FullHealthTag);
+	}
+	
 	if (CurrentHealth <= 0.f)
 	{
 		BP_Died();		
@@ -76,5 +97,20 @@ void AGU_CharacterBase::OnManaChanged(float CurrentMana, float BaseMana, float D
 void AGU_CharacterBase::OnStaminaChanged(float CurrentStamina, float BaseStamina, float Delta)
 {
 	BP_OnStaminaChanged(CurrentStamina, BaseStamina, Delta);
+}
+
+void AGU_CharacterBase::AddGameplayTagUnique(const FGameplayTag& Tag)
+{
+	GetAbilitySystemComponent()->AddLooseGameplayTag(Tag, 1);
+	GetAbilitySystemComponent()->SetLooseGameplayTagCount(Tag,1);
+}
+
+void AGU_CharacterBase::RemoveGameplayTagUnique(const FGameplayTag& Tag)
+{
+	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(Tag))
+	{
+		GetAbilitySystemComponent()->SetLooseGameplayTagCount(Tag,1);
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(Tag, 1);
+	}
 }
 

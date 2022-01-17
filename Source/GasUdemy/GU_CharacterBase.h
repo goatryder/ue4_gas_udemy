@@ -5,7 +5,24 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagContainer.h"
 #include "GU_CharacterBase.generated.h"
+
+class UGameplayAbility;
+
+USTRUCT(BlueprintType)
+struct FGU_StartupAbility
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayAbility> AbilityClass = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	bool bActivateOnStart = false;
+
+	FGU_StartupAbility() {}
+};
 
 UCLASS()
 class GASUDEMY_API AGU_CharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -36,14 +53,17 @@ private:
 
 	// grant ability to character class on begin play 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	TArray<TSubclassOf<class UGameplayAbility>> StartupAbilities;
+	TArray<FGU_StartupAbility> StartupAbilities;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FGameplayTag FullHealthTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta = (AllowPrivateAccess = true))
 	class UGU_TeamComponent* TeamComponent;
 	
 public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComp; }
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	void AquireAbility(TSubclassOf<class UGameplayAbility> AbilityToAquire);
 
@@ -67,5 +87,11 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void BP_Died();
+
+	UFUNCTION(BlueprintCallable)
+	void AddGameplayTagUnique(const FGameplayTag& Tag);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveGameplayTagUnique(const FGameplayTag& Tag);
 
 };
